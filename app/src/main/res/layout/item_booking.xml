@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="15dp"
+    android:layout_marginTop="20dp"
+    android:layout_marginEnd="15dp"
+    android:paddingTop="20dp"
+    android:paddingBottom="20dp"
+    android:background="@color/transactionBlue">
+
+
+    <TextView
+        android:id="@+id/text_view_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:layout_marginStart="7dp"
+        android:text="Data rezervarii: "
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_view_date_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="@id/text_view_date"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_date"
+        app:layout_constraintStart_toEndOf="@id/text_view_date"
+        android:layout_marginStart="10dp"
+        tools:text="Date" />
+
+    <TextView
+        android:id="@+id/text_view_persons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="15dp"
+        android:text="Numarul de persoane: "
+        app:layout_constraintTop_toBottomOf="@id/text_view_date"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/text_view_persons_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15sp"
+        app:layout_constraintTop_toTopOf="@id/text_view_persons"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_persons"
+        app:layout_constraintStart_toEndOf="@id/text_view_persons"
+        android:layout_marginStart="10dp"
+        tools:text="Persons" />
+
+    <ImageButton
+        android:id="@+id/image_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:contentDescription="Delete"
+        android:src="@drawable/ic_baseline_cancel_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

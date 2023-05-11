@@ -1,0 +1,70 @@
+<resources>
+    <string name="app_name">RestaurantApp</string>
+
+    <string name="domain">Domain</string>
+    <string name="title">Title</string>
+    <string name="priority">Priority</string>
+    <string name="deadline_date">Deadline Date</string>
+    <string name="description">Description</string>
+    <string name="add">Add</string>
+    <string name="create">Create</string>
+    <string name="more_actions">More Actions</string>
+    <string name="edit_icon">Edit Icon</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="would_you_like_to_split_the_main_task_in_multiple_subtasks">Would you like to split the main task in multiple subtasks?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="next">Next</string>
+    <string name="show_hide">Show Hide</string>
+    <string name="progress_percentage">%1$d%%</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email">Email</string>
+    <string name="create_a_new_account">Create a new account</string>
+    <string name="create_account">Create account</string>
+    <string name="enter_your_details">Enter your details</string>
+    <string name="a_time_management_app_for_productivity">A time management app for productivity</string>
+
+    <string name="edit_deatils">Edit deatils</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last Name</string>
+    <string name="start">start</string>
+    <string name="deadline">Deadline</string>
+    <string name="imposed_deadline">Imposed deadline</string>
+    <string name="priority_info">Priority:</string>
+    <string name="difficulty">Difficulty:</string>
+    <string name="progress">Progress</string>
+    <string name="time_spent">Time spent</string>
+    <string name="in_progress">In Progress</string>
+    <string name="complete">Complete</string>
+    <string name="difficult">Difficulty</string>
+    <string name="overdue">Overdue</string>
+    <string name="new_user">New user</string>
+    <string name="edit_profile">Edit profile</string>
+    <string name="recipient">Recipient</string>
+    <string name="send_money">Send money</string>
+    <string name="amount">Amount</string>
+    <string name="recipient2">Recipient:</string>
+    <string name="amount2">Amount:</string>
+    <string name="date_and_time">Date and time:</string>
+    <string name="description2">Description:</string>
+    <string name="date2">Date:</string>
+
+
+    <string name="restaurant">Restaurant</string>
+    <string name="sign_in_please">Va rugam sa va logati</string>
+    <string name="username">Nume de utilizator</string>
+    <string name="sign_in">Logare</string>
+    <string name="logout">Delogare</string>
+    <string name="password">Parola</string>
+
+
+    <string name="home">Acasa</string>
+    <string name="bookings">Rezervari</string>
+    <string name="profile">Profil</string>
+    <string name="user_name">%1$s %2$s</string>
+    <string name="welcome">Bine ai venit</string>
+    <string name="you_have_res">Urmatoarea rezervare este in data de %1$s</string>
+    <string name="you_have_no_res">Nu aveti rezervari momentan</string>
+    <string name="make_a_res">Fa o rezervare</string>
+</resources>
