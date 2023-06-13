@@ -2,11 +2,11 @@ package com.example.restaurantapp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.example.restaurantapp.data.model.entities.UserDetails
-import com.example.restaurantapp.data.repositories.LoginRepository
 import com.example.restaurantapp.data.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
@@ -17,9 +17,11 @@ class UpdateProfileViewModel @Inject constructor(
 
     val values = Companion
 
-    private var userDetails = UserDetails()
-
     private val completedFields: MutableSet<String> = mutableSetOf()
+
+    private val disposable = CompositeDisposable()
+
+    private var userDetails = UserDetails()
 
     fun setUserFields(value: String, type: String) {
         when (type) {
@@ -49,7 +51,7 @@ class UpdateProfileViewModel @Inject constructor(
 
     fun getUser(): Single<UserDetails> {
         return Single.create { emitter ->
-            userRepository.getUserDetails()
+            disposable.add(userRepository.getUserDetails()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ user ->
@@ -57,7 +59,7 @@ class UpdateProfileViewModel @Inject constructor(
                     emitter.onSuccess(user)
                 }, { throwable ->
                     emitter.onError(throwable)
-                })
+                }))
         }
     }
 
@@ -70,6 +72,11 @@ class UpdateProfileViewModel @Inject constructor(
 
     fun getCompletedFields(): MutableSet<String> {
         return completedFields
+    }
+
+    override fun onCleared() {
+        disposable.dispose()
+        super.onCleared()
     }
 
     companion object {

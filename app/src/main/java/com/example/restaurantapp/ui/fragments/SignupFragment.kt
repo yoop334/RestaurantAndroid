@@ -7,9 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.restaurantapp.databinding.FragmentLoginBinding
 import com.example.restaurantapp.databinding.FragmentSigupBinding
 import com.example.restaurantapp.ui.activities.MainActivity
 import com.example.restaurantapp.ui.viewmodels.LoginViewModel
@@ -17,12 +15,15 @@ import com.example.restaurantapp.ui.viewmodels.SignupViewModel
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 @AndroidEntryPoint
 class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
 
     private val viewModel by viewModels<SignupViewModel>()
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
         viewBinding = FragmentSigupBinding.inflate(inflater, container, false)
@@ -62,7 +63,7 @@ class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
             return
         }
 
-        viewModel.createUser()
+        disposable.add(viewModel.createUser()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -74,24 +75,29 @@ class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
                 { throwable ->
                     Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
                 }
-            )
+            ))
     }
 
     private fun loginUser() {
-        viewModel.login()
+        disposable.add(viewModel.login()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { result ->
-                    if (result == true) {
-                        val intent = Intent(activity, MainActivity::class.java)
-                        startActivity(intent)
+                    when (result) {
+                        0 -> {
+                            val intent = Intent(activity, MainActivity::class.java)
+                            startActivity(intent)
+                        }
+                        else -> {
+                            Toast.makeText(context, "Eroare", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 },
                 { throwable ->
                     Toast.makeText(context, throwable.message, Toast.LENGTH_SHORT).show()
                 }
-            )
+            ))
     }
 
     private fun validateOnCreateClicked() {
@@ -119,7 +125,7 @@ class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
         if (isValid) {
             textInputLayout.isErrorEnabled = false
         } else {
-            textInputLayout.error = "Add " + textInputLayout.hint
+            textInputLayout.error = "Adauga " + textInputLayout.hint
         }
     }
 
@@ -130,7 +136,7 @@ class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
             val value = editable.toString()
 
             if (value.isEmpty()) {
-                textInputLayout.error = "Add " + textInputLayout.hint
+                textInputLayout.error = "Adauga " + textInputLayout.hint
             } else {
                 textInputLayout.isErrorEnabled = false
             }
@@ -139,4 +145,9 @@ class SignupFragment : ValidatorFragment<FragmentSigupBinding>() {
     }
 
     override fun hasTopBar(): Boolean = false
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
+    }
 }

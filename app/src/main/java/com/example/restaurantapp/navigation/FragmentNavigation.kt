@@ -27,19 +27,4 @@ class FragmentNavigation(activity: Activity) {
         }
         transaction.commit()
     }
-
-    fun addFragment(fragment: Fragment, addToBackStack: Boolean = true) {
-        val transaction = (_activity as FragmentActivity).supportFragmentManager.beginTransaction()
-        transaction.add(_container, fragment)
-        when (addToBackStack) {
-            true -> transaction.addToBackStack(fragment.tag)
-            false -> return
-        }
-        transaction.commit()
-    }
-
-    fun popBackStack() {
-        (_activity as FragmentActivity).supportFragmentManager.popBackStack()
-    }
-
 }

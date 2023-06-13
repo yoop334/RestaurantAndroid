@@ -1,28 +1,26 @@
 package com.example.restaurantapp.ui.activities
 
 import android.os.Bundle
-import com.example.restaurantapp.ui.fragments.user.HomeFragment
 import com.example.restaurantapp.R
-import com.example.restaurantapp.databinding.ActivityMainBinding
-import com.example.restaurantapp.ui.fragments.user.BookingsFragment
-import com.example.restaurantapp.ui.fragments.user.ProfileFragment
+import com.example.restaurantapp.databinding.ActivityAdminBinding
+import com.example.restaurantapp.ui.fragments.admin.AdminBookingsFragment
+import com.example.restaurantapp.ui.fragments.admin.AdminProfileFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class AdminActivity : BaseActivity() {
 
-    private var _binding: ActivityMainBinding? = null
+    private var _binding: ActivityAdminBinding? = null
 
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
+        _binding = ActivityAdminBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
 
-        getFragmentNavigation().replaceFragment(HomeFragment())
+        getFragmentNavigation().replaceFragment(AdminBookingsFragment())
 
         bottomNavigationCallback()
     }
@@ -30,16 +28,12 @@ class MainActivity : BaseActivity() {
     private fun bottomNavigationCallback() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.page_home -> {
-                    getFragmentNavigation().replaceFragment(HomeFragment())
-                    true
-                }
                 R.id.page_bookings -> {
-                    getFragmentNavigation().replaceFragment(BookingsFragment())
+                    getFragmentNavigation().replaceFragment(AdminBookingsFragment())
                     true
                 }
                 R.id.page_profile -> {
-                    getFragmentNavigation().replaceFragment(ProfileFragment())
+                    getFragmentNavigation().replaceFragment(AdminProfileFragment())
                     true
                 }
                 else -> false

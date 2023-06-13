@@ -1,4 +1,4 @@
-package com.example.restaurantapp.ui.fragments
+package com.example.restaurantapp.ui.fragments.user
 
 import android.os.Bundle
 import android.util.Log
@@ -9,17 +9,24 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
 import com.example.restaurantapp.R
-import com.example.restaurantapp.data.model.entities.UserDetails
 import com.example.restaurantapp.databinding.FragmentHomeBinding
 import com.example.restaurantapp.ui.activities.BaseActivity
 import com.example.restaurantapp.ui.activities.MainActivity
+import com.example.restaurantapp.ui.fragments.BaseFragment
+import com.example.restaurantapp.ui.viewmodels.BookingsViewModel
 import com.example.restaurantapp.ui.viewmodels.ProfileViewModel
+import com.example.restaurantapp.utils.DateFormatter
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
-    private val viewModel by viewModels<ProfileViewModel>()
+    private val viewModelProfile by viewModels<ProfileViewModel>()
+
+    private val viewModelBookings by viewModels<BookingsViewModel>()
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
         viewBinding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -38,13 +45,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
 
         if (isFirstLoaded) {
             loadUserDetails()
+            loadNextBooking()
             initButtons()
         }
     }
 
     private fun initButtons() {
         binding.buttonMakeTransaction.setOnClickListener {
-            if (viewModel.checkUserDetails()) {
+            if (viewModelProfile.checkUserDetails()) {
                 (activity as BaseActivity).getFragmentNavigation()
                     .replaceFragment(MakeBookingFragment())
             } else {
@@ -54,10 +62,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     private fun loadUserDetails() {
-        viewModel.getUser()
+        disposable.add(viewModelProfile.getUser()
             .subscribe(
                 { userDetails ->
-                    if (viewModel.checkUserDetails()) {
+                    if (viewModelProfile.checkUserDetails()) {
                         binding.textUserName.text = context?.getString(
                             R.string.user_name,
                             userDetails.firstName,
@@ -74,13 +82,32 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
                             safeThrowable
                         )
                     }
-                })
+                }))
+    }
+
+    private fun loadNextBooking() {
+        disposable.add(viewModelBookings.getFirstBooking()
+            .subscribe(
+                { booking ->
+                    binding.textViewNext.text = context?.getString(R.string.you_have_res)
+                    binding.textViewNextInfo.visibility = View.VISIBLE
+                    binding.textViewNextInfo.text = DateFormatter.getDateTimeFromMillis(booking.time)
+
+                }, { throwable ->
+                    binding.textViewNext.text = context?.getString(R.string.no_res)
+                    binding.textViewNextInfo.visibility = View.INVISIBLE
+                    throwable.message?.let { safeThrowable ->
+                        Log.e(
+                            ProfileFragment::class.java.canonicalName,
+                            safeThrowable
+                        )
+                    }
+                }))
     }
 
     override fun getTitle(): String {
         return "Acasa"
     }
-
 
     private fun onBackPressListener() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -89,4 +116,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>() {
     }
 
     override fun hasTopBar(): Boolean = true
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
+    }
 }

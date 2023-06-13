@@ -16,5 +16,8 @@ data class User(
     val lastName: String?,
 
     @Json(name = "phone")
-    val phone: String?
+    val phone: String?,
+
+    @Json(name = "role")
+    val role: Int?
 )

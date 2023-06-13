@@ -1,4 +1,4 @@
-package com.example.restaurantapp.ui.fragments
+package com.example.restaurantapp.ui.fragments.user
 
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurantapp.databinding.FragmentBookingsBinding
 import com.example.restaurantapp.ui.activities.MainActivity
 import com.example.restaurantapp.ui.adapter.BookingsAdapter
+import com.example.restaurantapp.ui.fragments.BaseFragment
 import com.example.restaurantapp.ui.viewmodels.BookingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -22,11 +23,11 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 @AndroidEntryPoint
 class BookingsFragment : BaseFragment<FragmentBookingsBinding>(), BookingsAdapter.BookingListener {
 
-    private lateinit var bookingsAdapter: BookingsAdapter
-
     private val viewModel by activityViewModels<BookingsViewModel>()
 
     private val disposable = CompositeDisposable()
+
+    private lateinit var bookingsAdapter: BookingsAdapter
 
     override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
         viewBinding = FragmentBookingsBinding.inflate(inflater, container, false)
@@ -52,7 +53,7 @@ class BookingsFragment : BaseFragment<FragmentBookingsBinding>(), BookingsAdapte
     }
 
     private fun initRecyclerView() {
-        val recyclerView = binding.transactionsRecyclerView
+        val recyclerView = binding.bookingsRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(activity)
         recyclerView.adapter = bookingsAdapter
     }
@@ -61,11 +62,11 @@ class BookingsFragment : BaseFragment<FragmentBookingsBinding>(), BookingsAdapte
         disposable.add(
             viewModel.getAllBookings()
                 .subscribe(
-                    { transactions ->
-                        bookingsAdapter.setTasksList(transactions)
+                    { bookings ->
+                        bookingsAdapter.setBookingsList(bookings)
                         val pos = viewModel.getCurrentPosition()
                         Handler(Looper.getMainLooper()).postDelayed({
-                            binding.transactionsRecyclerView.scrollToPosition(pos)
+                            binding.bookingsRecyclerView.scrollToPosition(pos)
                         }, 200)
 
                     },
@@ -93,7 +94,7 @@ class BookingsFragment : BaseFragment<FragmentBookingsBinding>(), BookingsAdapte
     }
 
     private fun scroll() {
-        binding.transactionsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        binding.bookingsRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastPosition = (recyclerView.layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
@@ -101,6 +102,10 @@ class BookingsFragment : BaseFragment<FragmentBookingsBinding>(), BookingsAdapte
             }
         })
 
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.dispose()
     }
 
     override fun getTitle(): String {

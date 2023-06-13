@@ -32,7 +32,7 @@ abstract class ValidatorFragment<VB : ViewBinding> : BaseFragment<VB>() {
         if (isValid) {
             textInputLayout.isErrorEnabled = false
         } else {
-            textInputLayout.error = "Add " + textInputLayout.hint
+            textInputLayout.error = "Adauga " + textInputLayout.hint
         }
     }
 

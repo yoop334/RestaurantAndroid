@@ -1,6 +1,5 @@
 package com.example.restaurantapp.ui.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.restaurantapp.R
 import com.example.restaurantapp.data.model.entities.Booking
 import com.example.restaurantapp.databinding.ItemBookingBinding
-import com.example.restaurantapp.utils.CalendarManager
 import com.example.restaurantapp.utils.DateFormatter
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 class BookingsAdapter(
@@ -38,18 +34,16 @@ class BookingsAdapter(
 
     override fun getItemCount() = bookingsList.size
 
-
-    fun setTasksList(transactions: List<Booking>) {
+    fun setBookingsList(bookings: List<Booking>) {
         bookingsList.clear()
-        bookingsList.addAll(transactions)
-        notifyItemRangeChanged(0, bookingsList.size)
+        bookingsList.addAll(bookings)
+        notifyDataSetChanged()
     }
 
     fun notifyDataChanged(position: Int) {
         bookingsList.removeAt(position)
         notifyDataSetChanged()
     }
-
 
     class BookingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val binding = ItemBookingBinding.bind(itemView)

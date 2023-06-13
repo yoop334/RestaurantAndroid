@@ -21,5 +21,4 @@ object DateFormatter {
 
         return formatter.format(calendar.time)
     }
-
 }

@@ -49,5 +49,4 @@ class CalendarManager {
 
         return formatter.format(calendar.time)
     }
-
 }

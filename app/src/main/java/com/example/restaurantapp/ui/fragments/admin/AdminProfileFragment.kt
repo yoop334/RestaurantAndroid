@@ -1,4 +1,4 @@
-package com.example.restaurantapp.ui.fragments
+package com.example.restaurantapp.ui.fragments.admin
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,22 +8,27 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
-import com.example.restaurantapp.databinding.FragmnetProfileBinding
-import com.example.restaurantapp.ui.activities.BaseActivity
+import com.example.restaurantapp.databinding.FragmentProfileAdminBinding
+import com.example.restaurantapp.ui.activities.AdminActivity
 import com.example.restaurantapp.ui.activities.LoginActivity
-import com.example.restaurantapp.ui.activities.MainActivity
+import com.example.restaurantapp.ui.fragments.BaseFragment
+import com.example.restaurantapp.ui.fragments.user.ProfileFragment
 import com.example.restaurantapp.ui.viewmodels.ProfileViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
+
 @AndroidEntryPoint
-class ProfileFragment : BaseFragment<FragmnetProfileBinding>() {
+class AdminProfileFragment : BaseFragment<FragmentProfileAdminBinding>() {
 
     private val viewModel by viewModels<ProfileViewModel>()
 
+    private val disposable = CompositeDisposable()
+
     override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
-        viewBinding = FragmnetProfileBinding.inflate(inflater, container, false)
+        viewBinding = FragmentProfileAdminBinding.inflate(inflater, container, false)
 
         if (rootView == null) {
             rootView = viewBinding!!.root
@@ -39,22 +44,12 @@ class ProfileFragment : BaseFragment<FragmnetProfileBinding>() {
 
         if (isFirstLoaded) {
             initButton()
-            loadUserDetails()
         }
-    }
-
-    override fun getTitle(): String {
-        return "Profilul meu"
     }
 
     private fun initButton() {
-        binding.buttonUpdateDetails.setOnClickListener {
-            (activity as BaseActivity).getFragmentNavigation()
-                .replaceFragment(UpdateUserDetailsFragment())
-        }
-
         binding.buttonLogout.setOnClickListener {
-            viewModel.logout()
+            disposable.add(viewModel.logout()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
@@ -66,40 +61,29 @@ class ProfileFragment : BaseFragment<FragmnetProfileBinding>() {
                         }
                     }, { throwable ->
                         throwable.message?.let { safeThrowable ->
-                            Log.e(ProfileFragment::class.java.canonicalName,
+                            Log.e(
+                                ProfileFragment::class.java.canonicalName,
                                 safeThrowable
                             )
                         }
-                    })
+                    }))
         }
     }
 
-    private fun loadUserDetails() {
-//        viewModel.getUser()
-//            .subscribe(
-//                { result ->
-//                    binding.textUserName.text = context?.getString(
-//                        R.string.user_name,
-//                        result.firstName,
-//                        result.lastName
-//                    )
-//
-//                }, { throwable ->
-//                    throwable.message?.let { safeThrowable ->
-//                        Log.e(
-//                            ProfileFragment::class.java.canonicalName,
-//                            safeThrowable
-//                        )
-//                    }
-//                })
+    override fun getTitle(): String {
+        return "Profilul meu"
     }
 
+    override fun hasTopBar() = true
 
     private fun onBackPressListener() {
         requireActivity().onBackPressedDispatcher.addCallback(this) {
-            (activity as MainActivity).onBackPressMain()
+            (activity as AdminActivity).onBackPressMain()
         }
     }
 
-    override fun hasTopBar(): Boolean = true
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
+    }
 }

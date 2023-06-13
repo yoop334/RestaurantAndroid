@@ -64,7 +64,14 @@
     <string name="profile">Profil</string>
     <string name="user_name">%1$s %2$s</string>
     <string name="welcome">Bine ai venit</string>
-    <string name="you_have_res">Urmatoarea rezervare este in data de %1$s</string>
+    <string name="you_have_res">Urmatoarea rezervare este in data</string>
+    <string name="no_res">Momentan nu aveti rezervari</string>
     <string name="you_have_no_res">Nu aveti rezervari momentan</string>
     <string name="make_a_res">Fa o rezervare</string>
+    <string name="modifica_datele">Modifica datele</string>
+    <string name="data_rezervarii">Data rezervarii:</string>
+    <string name="numarul_de_persoane">Numarul de persoane:</string>
+    <string name="nume">Nume:</string>
+    <string name="telefon">Telefon:</string>
+    <string name="data_rezervarii2">Data rezervarii</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.restaurantapp.data.repositories
 
 import com.example.restaurantapp.data.model.entities.Booking
+import com.example.restaurantapp.data.model.entities.BookingUser
 import com.example.restaurantapp.data.remote.RestaurantApi
 import com.example.restaurantapp.utils.preferences.PreferenceHelper
 import io.reactivex.rxjava3.core.Single
@@ -32,6 +33,36 @@ class BookingsRepository @Inject constructor(
         return Single.create { emitter ->
 
             val result = restaurantApi.getAllBookings().execute()
+
+            if (result.isSuccessful) {
+                result.body()?.let { bookings ->
+                    emitter.onSuccess(bookings)
+                }
+            } else {
+                emitter.onError(Exception("Error"))
+            }
+        }
+    }
+
+    fun getFirstBooking(): Single<Booking> {
+        return Single.create { emitter ->
+
+            val result = restaurantApi.getFirstBooking().execute()
+
+            if (result.isSuccessful) {
+                result.body()?.let { booking ->
+                    emitter.onSuccess(booking)
+                }
+            } else {
+                emitter.onError(Exception("Error"))
+            }
+        }
+    }
+
+    fun getAllBookingsByDate(date: Long): Single<List<BookingUser>> {
+        return Single.create { emitter ->
+
+            val result = restaurantApi.getAllBookingsByDate(date).execute()
 
             if (result.isSuccessful) {
                 result.body()?.let { bookings ->

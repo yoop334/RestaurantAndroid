@@ -1,4 +1,4 @@
-package com.example.restaurantapp.ui.fragments
+package com.example.restaurantapp.ui.fragments.user
 
 import android.os.Bundle
 import android.util.Log
@@ -6,17 +6,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import com.example.restaurantapp.R
 import com.example.restaurantapp.databinding.FragmentUpdateUserDetailsBinding
 import com.example.restaurantapp.ui.activities.BaseActivity
+import com.example.restaurantapp.ui.fragments.ValidatorFragment
 import com.example.restaurantapp.ui.viewmodels.UpdateProfileViewModel
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 
 @AndroidEntryPoint
 class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBinding>() {
 
     private val viewModel by viewModels<UpdateProfileViewModel>()
+
+    private val disposable = CompositeDisposable()
 
     override fun onCreateViewBinding(inflater: LayoutInflater, container: ViewGroup?) {
         viewBinding = FragmentUpdateUserDetailsBinding.inflate(inflater, container, false)
@@ -45,7 +48,7 @@ class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBin
     }
 
     private fun loadUserDetails() {
-        viewModel.getUser()
+        disposable.add(viewModel.getUser()
             .subscribe(
                 { userDetails ->
                     binding.editTextFirstName.setText(userDetails.firstName)
@@ -59,7 +62,7 @@ class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBin
                             safeThrowable
                         )
                     }
-                })
+                }))
     }
 
     private fun validateOnCheckClicked() {
@@ -68,7 +71,7 @@ class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBin
             return
         }
 
-        viewModel.updateUser()
+        disposable.add(viewModel.updateUser()
             .subscribe(
                 { result ->
                     if (result == true) {
@@ -82,7 +85,7 @@ class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBin
                             safeThrowable
                         )
                     }
-                })
+                }))
     }
 
     override fun getTextInputsMap(): Map<String, TextInputLayout> {
@@ -105,4 +108,9 @@ class UpdateUserDetailsFragment : ValidatorFragment<FragmentUpdateUserDetailsBin
     }
 
     override fun hasTopBar(): Boolean = true
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
+    }
 }

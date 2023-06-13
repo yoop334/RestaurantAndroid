@@ -2,10 +2,12 @@ package com.example.restaurantapp.data.remote
 
 import com.example.restaurantapp.data.model.entities.Account
 import com.example.restaurantapp.data.model.entities.Booking
+import com.example.restaurantapp.data.model.entities.BookingUser
 import com.example.restaurantapp.data.model.entities.User
 import com.example.restaurantapp.data.model.entities.UserDetails
 import com.example.restaurantapp.data.model.requests.RefreshToken
 import com.example.restaurantapp.data.model.responses.LoginResponse
+import com.example.restaurantapp.data.model.responses.RefreshTokenResponse
 import com.example.restaurantapp.di.NetworkModule
 import retrofit2.Call
 import retrofit2.http.*
@@ -19,7 +21,7 @@ interface RestaurantApi {
     fun logout(): Call<Boolean>
 
     @PUT(NetworkModule.REFRESH)
-    fun refreshToken(@Body refreshToken: RefreshToken): Call<RefreshToken>
+    fun refreshToken(@Body refreshToken: RefreshToken): Call<RefreshTokenResponse>
 
     @GET(NetworkModule.USER_DETAILS)
     fun getUserDetails(): Call<UserDetails>
@@ -35,6 +37,12 @@ interface RestaurantApi {
 
     @GET(NetworkModule.GET_ALL_BOOKINGS)
     fun getAllBookings(): Call<List<Booking>>
+
+    @GET(NetworkModule.GET_FIRST_BOOKINGS)
+    fun getFirstBooking(): Call<Booking>
+
+    @GET(NetworkModule.GET_ALL_BOOKINGS_BY_DATE)
+    fun getAllBookingsByDate(@Path("date") date: Long): Call<List<BookingUser>>
 
     @POST(NetworkModule.CREATE_USER)
     fun createUser(@Body account: Account): Call<User>

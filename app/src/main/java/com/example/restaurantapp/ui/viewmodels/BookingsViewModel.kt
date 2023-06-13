@@ -2,12 +2,13 @@ package com.example.restaurantapp.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import com.example.restaurantapp.data.model.entities.Booking
+import com.example.restaurantapp.data.model.entities.BookingUser
 import com.example.restaurantapp.data.repositories.BookingsRepository
-import com.example.restaurantapp.data.repositories.UserRepository
 import com.example.restaurantapp.utils.CalendarManager.Companion.DATE_FORMAT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.text.SimpleDateFormat
 import java.util.*
@@ -15,19 +16,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookingsViewModel @Inject constructor(
-    private val userRepository: UserRepository,
-    private val bookingsRepository: BookingsRepository,
+    private val bookingsRepository: BookingsRepository
 ) : ViewModel() {
 
-    private var makeBookingListener: MakeBookingListener? = null
-
     val values = Companion
+
+    private val disposable = CompositeDisposable()
 
     private val completedFieldsForTransaction: MutableSet<String> = mutableSetOf()
 
     private val booking = Booking()
 
     private var currentPosition = 0
+
+    private var makeBookingListener: MakeBookingListener? = null
 
     fun getCurrentPosition(): Int {
         return currentPosition
@@ -37,7 +39,7 @@ class BookingsViewModel @Inject constructor(
         currentPosition = pos
     }
 
-    fun setTransactionField(value: String, type: String) {
+    fun setBookingField(value: String, type: String) {
         when (type) {
             DATE_VALUE -> {
                 val date: Date? =
@@ -75,27 +77,27 @@ class BookingsViewModel @Inject constructor(
 
     fun getAvailableNrPersonsForDate(date: Long): Single<List<Int>> {
         return Single.create { emitter ->
-            bookingsRepository.getAvailableNrPersonsForDate(date)
+            disposable.add(bookingsRepository.getAvailableNrPersonsForDate(date)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({ result ->
                     emitter.onSuccess(result)
                 }, { throwable ->
                     emitter.onError(throwable)
-                })
+                }))
         }
     }
 
     fun getAvailableHours(date: Long, nrPersons: Int): Single<List<Int>> {
         return Single.create { emitter ->
-            bookingsRepository.getAvailableHours(date, nrPersons)
+            disposable.add(bookingsRepository.getAvailableHours(date, nrPersons)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({ result ->
                     emitter.onSuccess(result)
                 }, { throwable ->
                     emitter.onError(throwable)
-                })
+                }))
         }
     }
 
@@ -105,7 +107,7 @@ class BookingsViewModel @Inject constructor(
 
     fun addBooking(): Single<Boolean> {
         return Single.create { emitter ->
-            bookingsRepository.addBooking(booking)
+            disposable.add(bookingsRepository.addBooking(booking)
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .subscribe({ result ->
@@ -116,12 +118,24 @@ class BookingsViewModel @Inject constructor(
                     }
                 }, { throwable ->
                     emitter.onError(throwable)
-                })
+                }))
         }
     }
 
     fun getAllBookings(): Single<List<Booking>> {
         return bookingsRepository.getAllBookings()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getFirstBooking(): Single<Booking> {
+        return bookingsRepository.getFirstBooking()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
+    fun getAllBookingsByDate(date: Long): Single<List<BookingUser>> {
+        return bookingsRepository.getAllBookingsByDate(date)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
     }
@@ -137,6 +151,11 @@ class BookingsViewModel @Inject constructor(
         booking.nrOfPersons = 0
         booking.time = 0
         completedFieldsForTransaction.clear()
+    }
+
+    override fun onCleared() {
+        disposable.dispose()
+        super.onCleared()
     }
 
     companion object {

@@ -24,7 +24,7 @@ class LoginRepository @Inject constructor(
         }
     }
 
-    fun login(account: Account): Single<Boolean> {
+    fun login(account: Account): Single<Int> {
         return Single.create { emitter ->
             preferenceHelper.setToken("")
             val response = restaurantApi.login(account).execute().body()
@@ -35,7 +35,7 @@ class LoginRepository @Inject constructor(
                 preferenceHelper.setToken(response.accessToken)
                 preferenceHelper.setUserId(response.user.id)
                 preferenceHelper.setRefreshToken(response.refreshToken)
-                emitter.onSuccess(true)
+                response.user.role?.let { emitter.onSuccess(it) } ?.run { emitter.onSuccess(-1) }
             }
         }
     }
@@ -57,7 +57,7 @@ class LoginRepository @Inject constructor(
         }
     }
 
-    fun isLoggedIn(): Single<Boolean> {
+    fun isLoggedIn(): Single<Int> {
         return Single.create { emitter ->
             if (preferenceHelper.getToken() == "") {
                 emitter.onError(Exception("Not logged in"))
@@ -71,7 +71,7 @@ class LoginRepository @Inject constructor(
                 } else {
                     preferenceHelper.setToken(response.accessToken)
                     preferenceHelper.setRefreshToken(response.refreshToken)
-                    emitter.onSuccess(true)
+                    emitter.onSuccess(response.role)
                 }
             }
         }

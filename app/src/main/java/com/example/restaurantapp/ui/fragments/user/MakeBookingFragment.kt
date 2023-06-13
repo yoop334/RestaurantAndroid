@@ -1,4 +1,4 @@
-package com.example.restaurantapp.ui.fragments
+package com.example.restaurantapp.ui.fragments.user
 
 import android.os.Bundle
 import android.text.InputType
@@ -14,6 +14,7 @@ import com.example.restaurantapp.R
 import com.example.restaurantapp.databinding.FragmentMakeBookingBinding
 import com.example.restaurantapp.ui.activities.BaseActivity
 import com.example.restaurantapp.ui.activities.MainActivity
+import com.example.restaurantapp.ui.fragments.ValidatorFragment
 import com.example.restaurantapp.ui.viewmodels.BookingsViewModel
 import com.example.restaurantapp.utils.CalendarManager
 import com.google.android.material.textfield.TextInputLayout
@@ -169,16 +170,11 @@ class MakeBookingFragment : ValidatorFragment<FragmentMakeBookingBinding>(), Boo
 
     private fun addValidationListeners() {
         addValidationListener(binding.textInputDate, viewModel.values.DATE_VALUE)
-        { x: String, y: String -> viewModel.setTransactionField(x, y) }
+        { x: String, y: String -> viewModel.setBookingField(x, y) }
         addValidationListener(binding.textInputPersons, viewModel.values.PERSONS_VALUE)
-        { x: String, y: String -> viewModel.setTransactionField(x, y) }
+        { x: String, y: String -> viewModel.setBookingField(x, y) }
         addValidationListener(binding.textInputHour, viewModel.values.TIME_VALUE)
-        { x: String, y: String -> viewModel.setTransactionField(x, y) }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        disposable.dispose()
+        { x: String, y: String -> viewModel.setBookingField(x, y) }
     }
 
     override fun hasTopBar(): Boolean = true
@@ -189,5 +185,10 @@ class MakeBookingFragment : ValidatorFragment<FragmentMakeBookingBinding>(), Boo
 
     override fun personsSelected(date: Long, persons: Int) {
         initHoursDropdown(date, persons)
+    }
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
     }
 }

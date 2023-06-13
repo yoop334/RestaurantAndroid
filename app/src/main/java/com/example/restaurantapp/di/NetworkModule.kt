@@ -73,6 +73,8 @@ class NetworkModule {
         const val HOURS_FOR_DATE = "/api/bookings/{date}/{nrOfPersons}"
         const val ADD_BOOKING = "/api/bookings"
         const val GET_ALL_BOOKINGS = "/api/bookings"
+        const val GET_FIRST_BOOKINGS = "/api/bookings/first"
+        const val GET_ALL_BOOKINGS_BY_DATE = "/api/bookings/all/{date}"
         const val CREATE_USER = "/api/users"
         const val UPDATE_USER = "/api/users"
         const val CANCEL_BOOKING = "/api/bookings/{id}"

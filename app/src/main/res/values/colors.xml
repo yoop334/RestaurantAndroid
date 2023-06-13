@@ -14,7 +14,7 @@
     <color name="colorPrimaryDark">#00B2FF</color>
     <color name="colorAccent">#03DAC5</color>
 
-    <color name="transactionBlue">#1A2264F4</color>
+    <color name="bookingBlue">#1A2264F4</color>
     <color name="taskDarkText">#1A1A1A</color>
     <color name="taskDarkTextLowerOpacity">#B21A1A1A</color>
     <color name="transactionRed">#FF7F95</color>

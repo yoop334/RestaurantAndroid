@@ -14,6 +14,7 @@ class RestaurantApplication : Application() {
         RxJavaPlugins.setErrorHandler { e ->
             if (e is UndeliverableException) {
                 val er = e.cause
+                Log.w("Error cause: ", er)
             }
             if (e is IOException) {
                 // fine, irrelevant network problem or API that throws on cancellation

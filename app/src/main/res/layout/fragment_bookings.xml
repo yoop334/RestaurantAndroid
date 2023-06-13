@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/transactions_recycler_view"
+        android:id="@+id/bookings_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/lightGrey"
@@ -22,6 +22,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

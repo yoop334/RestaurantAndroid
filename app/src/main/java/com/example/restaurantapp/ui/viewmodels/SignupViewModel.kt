@@ -6,7 +6,6 @@ import com.example.restaurantapp.data.repositories.LoginRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class SignupViewModel @Inject constructor(
@@ -23,7 +22,7 @@ class SignupViewModel @Inject constructor(
         return loginRepository.createUser(account)
     }
 
-    fun login(): Single<Boolean> {
+    fun login(): Single<Int> {
         return loginRepository.login(account)
     }
 

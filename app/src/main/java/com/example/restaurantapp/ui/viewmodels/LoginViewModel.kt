@@ -46,11 +46,11 @@ class LoginViewModel @Inject constructor(
         return completedFieldsForLogin
     }
 
-    fun login(): Single<Boolean> {
+    fun login(): Single<Int> {
         return loginRepository.login(account)
     }
 
-    fun isUserLoggedIn(): Single<Boolean> {
+    fun isUserLoggedIn(): Single<Int> {
         return loginRepository.isLoggedIn()
     }
 
